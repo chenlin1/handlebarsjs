@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>handlebars02</title>
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>  
+		<style>
+			.card{
+				font-size:14px;
+				float:left;
+				margin: 20px;
+				background-color:pink;
+			}
+		</style>
+		<script id="card-template" type="text/x-handlebars-template">
+			{{#each this}}
+			<div class="card">
+				<div>姓名：{{name}}</div>
+				{{#if birth}}
+				<div>出生日期：{{birth}}</div>
+				{{/if}}
+				<div>出生地：{{home}}</div>
+				<div>职业：{{job}}</div>
+				{{!--  each和with区别
+				<ul>
+					{{#each books}}
+					<li>{{this}}</li>
+					{{/each}}
+				</ul>
+				--}}
+			    <ul>
+					{{#with books}}
+					    {{#each this}}
+					    <li>{{this}}</li>
+					    {{/each}}
+					{{/with}}
+				</ul>
+			</div>
+			{{/each}}
+		</script>
+	</head>
+	<body>
+		<div class="card">
+		</div>
+		<script>
+			//数据
+			var data=[
+				{
+					name:'小林',
+					birth:'1991.02.07',
+					home:'中国',
+					job:'前端',
+					books:[
+					     '《欺骗的艺术》',
+					     '《入侵的艺术》',
+					     '《线上幽灵》'
+					]
+				},
+				{
+					name:'小飞',
+					birth:'1992.02.07',
+					home:'中国',
+					job:'前端',
+					books:[
+						'《孔子》',
+						'《孟子》'
+					]
+				},
+				{
+					name:'小林',
+					home:'中国',
+					job:'前端',
+				},
+			]
+			var t = $("#card-template").html();
+//			console.log(t);
+			var f = Handlebars.compile(t);
+//			console.log(f);s
+			var h = f(data);
+			$(".card").html(h);
+		</script>
+	</body>
+</html>
+
+
