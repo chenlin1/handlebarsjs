@@ -1,6 +1,8 @@
 (function($){
 	//后台给的数据
-	var GETCLASSES = "http://imoocnote.calfnote.com/inter/getClasses.php";
+	let GETCLASSES = "http://imoocnote.calfnote.com/inter/getClasses.php";
+	let GETCLASSCHAPTER = "http://imoocnote.calfnote.com/inter/getClassChapter.php";
+	let GETCLASSNOTE = "http://imoocnote.calfnote.com/inter/getClassNote.php";
 	
 	$.ajaxSetup({
 		error: function(){
@@ -21,14 +23,56 @@
 		renderTemplate("#class-template",data.data,"#classes");
 		//分页
 		renderTemplate("#pag-template",formatPag(data),"#pag");
-		 $("li.clickable").on("click",function(){
-        	$this = $(this);
-        	console.log($this.data('id'));
-        	refreshClasses($this.data('id'))
-        })
 		});
 	}
+	//显示隐藏
+	function showNote(show){
+		if(show){
+			$(".overlap").css('display', 'block');
+			$(".notedetail").css('display','block');
+		}else{
+			$(".overlap").css('display', 'none');
+			$(".notedetail").css('display','none');
+		}
+	}
+	$(".overlap").on('click',function(){
+		showNote(false);
+	})
 	
+	function bindClassEvent(){
+		$("#classes").delegate('li', 'click', function(){
+			$this = $(this);
+			var cid = $this.data('id');
+//			$.getJSON(GETCLASSCHAPTER,{cid:cid }, function(data){
+//				console.log(data);
+//				renderTemplate("#chapter-template",data,"#chapterdiv");
+//				showNote(true);
+//			});
+//			$.getJSON(GETCLASSNOTE,{cid:382 }, function(data){
+//				console.log(data);
+//				renderTemplate("#note-template",data,"#notediv");
+//			});
+			//解决弹窗和数据那个先的bug
+			$.when($.getJSON(GETCLASSCHAPTER,{cid:cid }),
+				   $.getJSON(GETCLASSNOTE,{cid:cid })).done(function(cData, nData){
+//				   	console.log(cData);
+//				   	console.log(nData);
+                   renderTemplate("#chapter-template",cData[0],"#chapterdiv");
+                   renderTemplate("#note-template",nData[0],"#notediv");
+                   showNote(true);
+			});
+		});
+	}
+	bindClassEvent()
+	//事件委托
+	function bindPageEvent(){
+		$("#pag").delegate('li.clickable', 'click', function(){
+        	$this = $(this);
+        	console.log($this.data('id'));
+        	refreshClasses($this.data('id'));
+        });
+	}
+	bindPageEvent();
 	$.getJSON(GETCLASSES,{curPage: 1}, function(data){
 		console.log(data);
 //		var t = $("#class-template").html();
@@ -42,11 +86,11 @@
 //		var f = Handlebars.compile(t);
 //		var h = f(formatPag(data));
 //		$("#pag").html(h);
-        $("li.clickable").on("click",function(){
-        	$this = $(this);
-        	console.log($this.data('id'));
-        	refreshClasses($this.data('id'))
-        })
+//      $("li.clickable").on("click",function(){
+//      	$this = $(this);
+//      	console.log($this.data('id'));
+//      	refreshClasses($this.data('id'))
+//      })
 	})
 	//判断有木有笔记
 	Handlebars.registerHelper("equal", function(v1,v2, options){
@@ -64,6 +108,27 @@
 			return options.inverse(this);
 		}
 	})
+	//序列
+	Handlebars.registerHelper("addone", function(v){
+	    return v+1;
+	})
+	//转换时间戳
+	Handlebars.registerHelper("formatDate", function(value){
+	    if(!value){
+	    	return "";
+	    }
+	    let d =new Date(value);
+	    let year = d.getFullYear();
+	    let month = d.getMonth() + 1;
+	    let date = d.getDate();
+	    let hour = d.getHours();
+	    let minute = d.getMinutes();
+	    let second = d.getSeconds();
+	    let str = year + "-" + month +"-"+date+"-"+hour+":"+minute+":"+second;
+	    return str;
+	    
+	})
+	
 	//分页
 	Handlebars.registerHelper("pag", function(v1, v2){
 		

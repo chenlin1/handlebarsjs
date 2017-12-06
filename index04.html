@@ -9,7 +9,7 @@
 		<script id="class-template" type="text/x-handlebars-template">
 			<ul>
 				{{#each this}}
-				<li>
+				<li data-id = "{{id}}">
 					<div class="innerbox">
 						<img src="{{image}}" alt="{{title}}">
 						<div class="titlediv">
@@ -35,6 +35,43 @@
 				{{/each}}
 			</ul>
 		</script>
+		<script id="chapter-template" type="text/x-handlebars-template">
+			<ul class="titleul"> 
+				{{#each this}}
+				<li class="titleli">
+					<div class="title">{{addone @index}}、{{title}}</div>
+					<ul>
+						{{#each subTitle}}
+						<li class="subtitle">
+							{{addone @../index}}-{{addone @index}}
+							<a href="http://www.imooc.com/{{titletype}}/{{mid}}" target="_blank">{{title}}</a>
+							{{#if timespan}}<span class="time">({{timespan}})</span>{{/if}}
+							{{#equal titletype 'code'}}
+							<span class="type">(编程)</span>
+							{{else}}
+								{{#equal titletype 'ceping'}}
+								<span class="type">(练习)</span>
+								{{/equal}}
+							{{/equal}}
+						</li>
+						{{/each}}
+					</ul>
+				</li>
+				{{/each}}
+			</ul>
+		</script>
+		<script id="note-template" type="text/x-handlebars-template">
+			<ul class="noteul">
+				{{#each this}}
+					<li>
+						<div class="time">{{formatDate notetime}}</div>
+						<div class="content">
+							{{{content}}}
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+		</script>
 	</head>
 	<body>
 		<div class="banner">
@@ -55,6 +92,54 @@
 				<li>7</li>
 				<li>8</li>
 			</ul>-->
+		</div>
+		<div class="overlap"></div>
+		<div class="notedetail">
+			<div class="chapterdiv" id="chapterdiv">
+				<!--<ul class="titleul"> 
+					<li class="titleli">
+						<div class="title">1.课堂介绍</div>
+						<ul>
+							<li class="subtitle">
+								1-1
+								<a href="javascript:">课堂介绍</a>
+								<span class="time">(02:50)</span>
+							</li>
+							<li class="subtitle">
+								1-2
+								<a href="javascript:">课堂介绍</a>
+								<span class="time">(02:50)</span>
+							</li>
+						</ul>
+					</li>
+					<li class="titleli">
+						<div class="title">1.课堂介绍</div>
+						<ul>
+							<li class="subtitle">
+								1-1
+								<a href="javascript:">课堂介绍</a>
+								<span class="time">(02:50)</span>
+							</li>
+							<li class="subtitle">
+								1-2
+								<a href="javascript:">课堂介绍</a>
+								<span class="time">(02:50)</span>
+							</li>
+						</ul>
+					</li>
+				</ul>-->
+			</div>
+			<div class="notemiddle"></div>
+			<div class="notediv" id="notediv">
+				<!--<ul class="noteul">
+					<li>
+						<div class="time">2015-8-14 6:57:00</div>
+						<div class="content">
+							2015-8-14 6:57:00 2015-8-14 6:57:00 2015-8-14 6:57:00
+						</div>
+					</li>
+				</ul>-->
+			</div>
 		</div>
 		<script type="text/javascript" src="js/index04.js" ></script>
 	</body>
