@@ -85,4 +85,4 @@
     1.避免在js中写"html代码"
     2.可读性好
     3.易维护
-## 5. handlebarsjs特点 ### handlebarsjs
+## 5. handlebarsjs特点 ##
